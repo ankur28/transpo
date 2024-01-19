@@ -2,9 +2,11 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { UserButton } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 function Navbar() {
   const [darkMode, setDarkMode] = useState(true);
+  const router:any = useRouter()
 
   useEffect(() => {
     const theme = localStorage.getItem("theme");
@@ -41,6 +43,7 @@ function Navbar() {
           <h2
             className="hover:bg-gray-100 hover:dark:bg-gray-700
            p-2 rounded-md cursor-pointer transition-all"
+          onClick={() => router.push("/")}
           >
             Home
           </h2>
