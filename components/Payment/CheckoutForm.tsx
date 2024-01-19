@@ -13,7 +13,6 @@ function CheckoutForm() {
    const { carAmount, setCarAmount } = useContext(UserSelectedAmountContext) || {};
 
   const handleSubmit = async (event: any) => {
-    event.preventDefault();
     if (elements == null) {
       return;
     }

@@ -1,27 +1,22 @@
-import { Stripe } from 'stripe';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { Stripe } from '@stripe/stripe-js';
+import { NextResponse } from 'next/server';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as any, {
-    apiVersion: '2023-10-16', 
-    typescript: true
-  });    
-  export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    if (req.method !== 'POST') {
-      return res.status(405).json({ message: 'Method Not Allowed' });
-    }
-  
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
+    
+
+export async function POST(request:any){
+    const data:any = await request.json()
+    const amount = data.amount
+
     try {
-      const { amount } = req.body;
-  
-      // Create a PaymentIntent on the server
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount,
-        currency: 'usd', // or your preferred currency
-      });
-  
-      res.status(200).json({ clientSecret: paymentIntent.client_secret });
-    } catch (error) {
-      console.error('Error creating PaymentIntent:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount,
+            currency: 'usd',
+          });
+        return NextResponse.json(paymentIntent.clientSecret,{status:200})
+    } catch (error:any) {
+        return new NextResponse(error, {
+            status: 400
+        })
     }
-  }
+}
